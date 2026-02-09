@@ -40,11 +40,11 @@ img{max-width:100%;border-radius:8px;margin-top:10px}
 </div>
 
 <div class="card p-3 mb-4">
-<h6 class="mb-2"><i class="fas fa-plus-circle"></i> Registrar / Editar PC</h6>
-
+<h6><i class="fas fa-plus-circle"></i> Registrar / Editar PC</h6>
 <input type="hidden" id="editIndex">
 
 <div class="row g-2">
+
 <div class="col-12 col-md-6">
 <label>Código Activo</label>
 <input class="form-control" id="codigo">
@@ -71,12 +71,22 @@ img{max-width:100%;border-radius:8px;margin-top:10px}
 </div>
 
 <div class="col-12 col-md-6">
+<label>Modelo Placa Madre</label>
+<input class="form-control" id="placa">
+</div>
+
+<div class="col-12 col-md-6">
+<label>Tarjeta Gráfica</label>
+<input class="form-control" id="gpu">
+</div>
+
+<div class="col-12 col-md-6">
 <label>Sistema Operativo</label>
 <input class="form-control" id="os">
 </div>
 
 <div class="col-12 col-md-6">
-<label>Estado General</label>
+<label>Estado General del PC</label>
 <select class="form-select" id="estadoPC">
 <option>Operativo</option>
 <option>Mantenimiento</option>
@@ -119,10 +129,20 @@ img{max-width:100%;border-radius:8px;margin-top:10px}
 </select>
 </div>
 
+<div class="col-6 col-md-4">
+<label>Pila BIOS</label>
+<select class="form-select" id="bios">
+<option>Buena</option>
+<option>Regular</option>
+<option>Cambiar</option>
+</select>
+</div>
+
 <div class="col-12">
 <label>Evidencia (foto)</label>
 <input type="file" class="form-control" id="evidencia" accept="image/*">
 </div>
+
 </div>
 
 <button class="btn btn-primary w-100 mt-3" onclick="savePC()">
@@ -149,6 +169,8 @@ aula:aula.value,
 cpu:cpu.value,
 ram:ram.value,
 storage:storage.value,
+placa:placa.value,
+gpu:gpu.value,
 os:os.value,
 estado:estadoPC.value,
 teclado:teclado.value,
@@ -156,6 +178,7 @@ mouse:mouse.value,
 monitor:monitor.value,
 parlante:parlante.value,
 proyector:proyector.value,
+bios:bios.value,
 evidencia:file?reader.result:(idx!==""?base[idx].evidencia:null),
 fecha:new Date().toLocaleString()
 };
@@ -184,9 +207,11 @@ pcList.innerHTML+=`
 <span class="badge ${p.estado==='Operativo'?'badge-operativo':p.estado==='Mantenimiento'?'badge-mantenimiento':'badge-baja'} ms-2">${p.estado}</span>
 <ul class="mt-2 small">
 <li>${p.cpu} | ${p.ram} | ${p.storage}</li>
+<li>Placa: ${p.placa}</li>
+<li>Gráfica: ${p.gpu}</li>
 <li>Teclado:${p.teclado} | Mouse:${p.mouse}</li>
 <li>Monitor:${p.monitor} | Parlante:${p.parlante}</li>
-<li>Proyector:${p.proyector}</li>
+<li>Proyector:${p.proyector} | BIOS:${p.bios}</li>
 </ul>
 ${p.evidencia?`<img src="${p.evidencia}">`:''}
 <div class="d-flex gap-2 flex-wrap mt-2">
@@ -215,8 +240,11 @@ render();
 function exportExcel(){
 const wb=new ExcelJS.Workbook();
 const ws=wb.addWorksheet("Inventario");
-ws.addRow(["Código","Aula","CPU","RAM","Disco","SO","Estado","Teclado","Mouse","Monitor","Parlante","Proyector"]);
-base.forEach(p=>ws.addRow([p.codigo,p.aula,p.cpu,p.ram,p.storage,p.os,p.estado,p.teclado,p.mouse,p.monitor,p.parlante,p.proyector]));
+ws.addRow(["Código","Aula","CPU","RAM","Disco","Placa","Gráfica","SO","Estado","Teclado","Mouse","Monitor","Parlante","Proyector","BIOS"]);
+base.forEach(p=>ws.addRow([
+p.codigo,p.aula,p.cpu,p.ram,p.storage,p.placa,p.gpu,p.os,p.estado,
+p.teclado,p.mouse,p.monitor,p.parlante,p.proyector,p.bios
+]));
 wb.xlsx.writeBuffer().then(b=>{
 const a=document.createElement("a");
 a.href=URL.createObjectURL(new Blob([b]));
@@ -232,7 +260,7 @@ const pdf=new jsPDF();
 pdf.text("ACTA DE ENTREGA DE EQUIPO",105,15,{align:"center"});
 let y=30;
 Object.entries(p).forEach(([k,v])=>{
-if(k!=="evidencia") pdf.text(`${k.toUpperCase()}: ${v}`,20,y+=8);
+if(k!=="evidencia") pdf.text(`${k.toUpperCase()}: ${v}`,20,y+=7);
 });
 pdf.save(`Acta_${p.codigo}.pdf`);
 }
