@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario de PCs - Aulas</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+<style>
+body{
+  background:#020617;
+  color:#e5e7eb;
+  padding:20px
+}
+.card{
+  background:#020617;
+  border:1px solid #1e293b
+}
+.form-control, .form-select{
+  background:#020617;
+  color:#e5e7eb;
+  border:1px solid #1e293b
+}
+img{
+  max-width:100%;
+  border-radius:8px;
+  margin-top:10px
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h4 class="mb-4">
+<i class="fas fa-desktop text-primary"></i>
+ Inventario de PCs por Aula
+</h4>
+
+<div class="card p-4 mb-4">
+<h5><i class="fas fa-plus-circle"></i> Registrar PC</h5>
+
+<div class="row g-3 mt-2">
+
+<div class="col-md-4">
+<input class="form-control" id="codigo" placeholder="Código Activo">
+</div>
+
+<div class="col-md-4">
+<input class="form-control" id="cpu" placeholder="Procesador">
+</div>
+
+<div class="col-md-4">
+<input class="form-control" id="ram" placeholder="Memoria RAM">
+</div>
+
+<div class="col-md-4">
+<input class="form-control" id="storage" placeholder="Almacenamiento">
+</div>
+
+<div class="col-md-4">
+<input class="form-control" id="os" placeholder="Sistema Operativo">
+</div>
+
+<div class="col-md-4">
+<input class="form-control" id="aula" placeholder="Aula">
+</div>
+
+<!-- ESTADOS -->
+<div class="col-md-4">
+<select class="form-select" id="teclado">
+<option value="">Estado Teclado</option>
+<option>Bueno</option>
+<option>Regular</option>
+<option>Malo</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<select class="form-select" id="mouse">
+<option value="">Estado Mouse</option>
+<option>Bueno</option>
+<option>Regular</option>
+<option>Malo</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<select class="form-select" id="monitor">
+<option value="">Estado Monitor</option>
+<option>Bueno</option>
+<option>Regular</option>
+<option>Malo</option>
+</select>
+</div>
+
+<!-- EVIDENCIA -->
+<div class="col-md-12">
+<label class="form-label">Evidencia (Foto)</label>
+<input type="file" class="form-control" accept="image/*" id="evidencia">
+</div>
+
+</div>
+
+<button class="btn btn-primary mt-3 w-100" onclick="addPC()">
+<i class="fas fa-save"></i> Guardar Registro
+</button>
+</div>
+
+<div id="pcList"></div>
+
+</div>
+
+<script>
+let pcBase = JSON.parse(localStorage.getItem("pcBase")) || [];
+
+function addPC(){
+  if(!codigo.value) return alert("Ingrese el Código Activo");
+
+  const reader = new FileReader();
+  const file = evidencia.files[0];
+
+  reader.onload = function(){
+    const pc = {
+      codigo: codigo.value,
+      cpu: cpu.value,
+      ram: ram.value,
+      storage: storage.value,
+      os: os.value,
+      aula: aula.value,
+      teclado: teclado.value,
+      mouse: mouse.value,
+      monitor: monitor.value,
+      evidencia: file ? reader.result : null,
+      fecha: new Date().toLocaleString("es-ES")
+    };
+
+    pcBase.push(pc);
+    localStorage.setItem("pcBase", JSON.stringify(pcBase));
+    limpiar();
+    render();
+  };
+
+  if(file) reader.readAsDataURL(file);
+  else reader.onload();
+}
+
+function limpiar(){
+  document.querySelectorAll("input,select").forEach(e=>e.value="");
+}
+
+function deletePC(i){
+  if(confirm("¿Eliminar registro?")){
+    pcBase.splice(i,1);
+    localStorage.setItem("pcBase", JSON.stringify(pcBase));
+    render();
+  }
+}
+
+function render(){
+  pcList.innerHTML = "";
+  pcBase.forEach((pc,i)=>{
+    pcList.innerHTML += `
+    <div class="card p-3 mb-3">
+      <strong>🖥️ ${pc.codigo}</strong>
+      <div class="text-muted small">${pc.fecha}</div>
+
+      <ul class="mt-2">
+        <li><b>Aula:</b> ${pc.aula}</li>
+        <li><b>CPU:</b> ${pc.cpu}</li>
+        <li><b>RAM:</b> ${pc.ram}</li>
+        <li><b>Disco:</b> ${pc.storage}</li>
+        <li><b>SO:</b> ${pc.os}</li>
+        <li>⌨️ Teclado: ${pc.teclado}</li>
+        <li>🖱️ Mouse: ${pc.mouse}</li>
+        <li>🖥️ Monitor: ${pc.monitor}</li>
+      </ul>
+
+      ${pc.evidencia ? `<img src="${pc.evidencia}">` : ""}
+
+      <button class="btn btn-sm btn-danger mt-2" onclick="deletePC(${i})">
+      <i class="fas fa-trash"></i> Eliminar
+      </button>
+    </div>
+    `;
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>
