@@ -2,18 +2,19 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Inventario de PCs - Aulas</title>
+<title>Inventario de PCs por Aula</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
 
 <style>
-body{background:#020617;color:#e5e7eb;padding:20px}
+body{background:#020617;color:#e5e7eb}
 .card{background:#020617;border:1px solid #1e293b}
 .form-control,.form-select{background:#020617;color:#e5e7eb;border:1px solid #1e293b}
+label{font-size:.9rem}
 img{max-width:100%;border-radius:8px;margin-top:10px}
 .badge-operativo{background:#065f46}
 .badge-mantenimiento{background:#92400e}
@@ -22,63 +23,109 @@ img{max-width:100%;border-radius:8px;margin-top:10px}
 </head>
 
 <body>
-<div class="container">
+<div class="container py-3">
 
-<h4 class="mb-3"><i class="fas fa-desktop text-primary"></i> Inventario de PCs por Aula</h4>
+<h4 class="text-center mb-3">
+<i class="fas fa-desktop text-primary"></i> Inventario de PCs por Aula
+</h4>
 
 <div class="d-flex gap-2 mb-3 flex-wrap">
-<select id="filtroAula" class="form-select w-auto" onchange="render()">
+<select id="filtroAula" class="form-select" onchange="render()">
 <option value="">🔍 Todas las aulas</option>
 </select>
 
-<button class="btn btn-success" onclick="exportExcel()">
-<i class="fas fa-file-excel"></i> Excel
+<button class="btn btn-success w-100 w-md-auto" onclick="exportExcel()">
+<i class="fas fa-file-excel"></i> Exportar Excel
 </button>
 </div>
 
-<!-- FORM -->
-<div class="card p-4 mb-4">
-<h5>Registrar / Editar PC</h5>
+<div class="card p-3 mb-4">
+<h6 class="mb-2"><i class="fas fa-plus-circle"></i> Registrar / Editar PC</h6>
 
 <input type="hidden" id="editIndex">
 
-<div class="row g-3 mt-2">
-<input class="form-control col" id="codigo" placeholder="Código Activo">
-<input class="form-control col" id="aula" placeholder="Aula">
-<input class="form-control col" id="cpu" placeholder="CPU">
-<input class="form-control col" id="ram" placeholder="RAM">
-<input class="form-control col" id="storage" placeholder="Disco">
-<input class="form-control col" id="os" placeholder="Sistema Operativo">
+<div class="row g-2">
+<div class="col-12 col-md-6">
+<label>Código Activo</label>
+<input class="form-control" id="codigo">
+</div>
 
-<select class="form-select col" id="estadoPC">
-<option value="">Estado General</option>
+<div class="col-12 col-md-6">
+<label>Aula</label>
+<input class="form-control" id="aula">
+</div>
+
+<div class="col-12 col-md-4">
+<label>CPU</label>
+<input class="form-control" id="cpu">
+</div>
+
+<div class="col-12 col-md-4">
+<label>RAM</label>
+<input class="form-control" id="ram">
+</div>
+
+<div class="col-12 col-md-4">
+<label>Disco</label>
+<input class="form-control" id="storage">
+</div>
+
+<div class="col-12 col-md-6">
+<label>Sistema Operativo</label>
+<input class="form-control" id="os">
+</div>
+
+<div class="col-12 col-md-6">
+<label>Estado General</label>
+<select class="form-select" id="estadoPC">
 <option>Operativo</option>
 <option>Mantenimiento</option>
 <option>Baja</option>
 </select>
-
-<select class="form-select col" id="teclado">
-<option>Teclado Bueno</option>
-<option>Teclado Regular</option>
-<option>Teclado Malo</option>
-</select>
-
-<select class="form-select col" id="mouse">
-<option>Mouse Bueno</option>
-<option>Mouse Regular</option>
-<option>Mouse Malo</option>
-</select>
-
-<select class="form-select col" id="monitor">
-<option>Monitor Bueno</option>
-<option>Monitor Regular</option>
-<option>Monitor Malo</option>
-</select>
-
-<input type="file" class="form-control col-12" id="evidencia" accept="image/*">
 </div>
 
-<button class="btn btn-primary mt-3 w-100" onclick="savePC()">
+<div class="col-6 col-md-4">
+<label>Teclado</label>
+<select class="form-select" id="teclado">
+<option>Bueno</option><option>Regular</option><option>Malo</option>
+</select>
+</div>
+
+<div class="col-6 col-md-4">
+<label>Mouse</label>
+<select class="form-select" id="mouse">
+<option>Bueno</option><option>Regular</option><option>Malo</option>
+</select>
+</div>
+
+<div class="col-6 col-md-4">
+<label>Monitor</label>
+<select class="form-select" id="monitor">
+<option>Bueno</option><option>Regular</option><option>Malo</option>
+</select>
+</div>
+
+<div class="col-6 col-md-4">
+<label>Parlante</label>
+<select class="form-select" id="parlante">
+<option>Bueno</option><option>Regular</option><option>Malo</option>
+</select>
+</div>
+
+<div class="col-6 col-md-4">
+<label>Proyector</label>
+<select class="form-select" id="proyector">
+<option>Bueno</option><option>Regular</option><option>Malo</option><option>No Aplica</option>
+</select>
+</div>
+
+<div class="col-12">
+<label>Evidencia (foto)</label>
+<input type="file" class="form-control" id="evidencia" accept="image/*">
+</div>
+</div>
+
+<button class="btn btn-primary w-100 mt-3" onclick="savePC()">
 <i class="fas fa-save"></i> Guardar
 </button>
 </div>
@@ -91,111 +138,103 @@ img{max-width:100%;border-radius:8px;margin-top:10px}
 let base = JSON.parse(localStorage.getItem("pcBase")) || [];
 
 function savePC(){
-  const idx = editIndex.value;
-  const reader = new FileReader();
-  const file = evidencia.files[0];
+const idx = editIndex.value;
+const file = evidencia.files[0];
+const reader = new FileReader();
 
-  reader.onload = ()=>{
-    const pc = {
-      codigo: codigo.value,
-      aula: aula.value,
-      cpu: cpu.value,
-      ram: ram.value,
-      storage: storage.value,
-      os: os.value,
-      estado: estadoPC.value,
-      teclado: teclado.value,
-      mouse: mouse.value,
-      monitor: monitor.value,
-      evidencia: file ? reader.result : (idx !== "" ? base[idx].evidencia : null),
-      fecha: new Date().toLocaleString("es-ES")
-    };
-
-    idx === "" ? base.push(pc) : base[idx] = pc;
-    localStorage.setItem("pcBase", JSON.stringify(base));
-    clearForm(); render();
-  };
-
-  file ? reader.readAsDataURL(file) : reader.onload();
+reader.onload = ()=>{
+const pc={
+codigo:codigo.value,
+aula:aula.value,
+cpu:cpu.value,
+ram:ram.value,
+storage:storage.value,
+os:os.value,
+estado:estadoPC.value,
+teclado:teclado.value,
+mouse:mouse.value,
+monitor:monitor.value,
+parlante:parlante.value,
+proyector:proyector.value,
+evidencia:file?reader.result:(idx!==""?base[idx].evidencia:null),
+fecha:new Date().toLocaleString()
+};
+idx===""?base.push(pc):base[idx]=pc;
+localStorage.setItem("pcBase",JSON.stringify(base));
+clearForm();render();
+};
+file?reader.readAsDataURL(file):reader.onload();
 }
 
 function clearForm(){
-  document.querySelectorAll("input,select").forEach(e=>e.value="");
-  editIndex.value="";
+document.querySelectorAll("input,select").forEach(e=>e.value="");
+editIndex.value="";
 }
 
 function render(){
-  pcList.innerHTML="";
-  filtroAula.innerHTML='<option value="">Todas las aulas</option>';
-  [...new Set(base.map(p=>p.aula))].forEach(a=>{
-    filtroAula.innerHTML+=`<option ${filtroAula.value===a?'selected':''}>${a}</option>`;
-  });
+pcList.innerHTML="";
+filtroAula.innerHTML='<option value="">Todas las aulas</option>';
+[...new Set(base.map(p=>p.aula))].forEach(a=>filtroAula.innerHTML+=`<option>${a}</option>`);
 
-  base.filter(p=>!filtroAula.value||p.aula===filtroAula.value)
-  .forEach((p,i)=>{
-    pcList.innerHTML+=`
-    <div class="card p-3 mb-3">
-    <strong>${p.codigo}</strong> - Aula ${p.aula}
-    <span class="badge ${p.estado==='Operativo'?'badge-operativo':p.estado==='Mantenimiento'?'badge-mantenimiento':'badge-baja'} ms-2">${p.estado}</span>
-    <ul>
-      <li>${p.cpu} | ${p.ram} | ${p.storage}</li>
-      <li>${p.teclado} | ${p.mouse} | ${p.monitor}</li>
-    </ul>
-    ${p.evidencia?`<img src="${p.evidencia}">`:''}
-    <div class="mt-2">
-      <button class="btn btn-sm btn-info" onclick="editPC(${i})">Editar</button>
-      <button class="btn btn-sm btn-warning" onclick="pdfPC(${i})">PDF</button>
-      <button class="btn btn-sm btn-danger" onclick="delPC(${i})">Eliminar</button>
-    </div>
-    </div>`;
-  });
+base.filter(p=>!filtroAula.value||p.aula===filtroAula.value)
+.forEach((p,i)=>{
+pcList.innerHTML+=`
+<div class="card p-3 mb-3">
+<b>${p.codigo}</b> | Aula ${p.aula}
+<span class="badge ${p.estado==='Operativo'?'badge-operativo':p.estado==='Mantenimiento'?'badge-mantenimiento':'badge-baja'} ms-2">${p.estado}</span>
+<ul class="mt-2 small">
+<li>${p.cpu} | ${p.ram} | ${p.storage}</li>
+<li>Teclado:${p.teclado} | Mouse:${p.mouse}</li>
+<li>Monitor:${p.monitor} | Parlante:${p.parlante}</li>
+<li>Proyector:${p.proyector}</li>
+</ul>
+${p.evidencia?`<img src="${p.evidencia}">`:''}
+<div class="d-flex gap-2 flex-wrap mt-2">
+<button class="btn btn-info btn-sm" onclick="editPC(${i})">Editar</button>
+<button class="btn btn-warning btn-sm" onclick="pdfPC(${i})">PDF</button>
+<button class="btn btn-danger btn-sm" onclick="delPC(${i})">Eliminar</button>
+</div>
+</div>`;
+});
 }
 
 function editPC(i){
-  const p=base[i];
-  editIndex.value=i;
-  codigo.value=p.codigo;
-  aula.value=p.aula;
-  cpu.value=p.cpu;
-  ram.value=p.ram;
-  storage.value=p.storage;
-  os.value=p.os;
-  estadoPC.value=p.estado;
-  teclado.value=p.teclado;
-  mouse.value=p.mouse;
-  monitor.value=p.monitor;
+const p=base[i];
+editIndex.value=i;
+Object.keys(p).forEach(k=>document.getElementById(k)&&(document.getElementById(k).value=p[k]));
 }
 
 function delPC(i){
-  if(confirm("Eliminar PC?")){
-    base.splice(i,1);
-    localStorage.setItem("pcBase",JSON.stringify(base));
-    render();
-  }
+if(confirm("¿Eliminar registro?")){
+base.splice(i,1);
+localStorage.setItem("pcBase",JSON.stringify(base));
+render();
+}
 }
 
 function exportExcel(){
-  const wb=new ExcelJS.Workbook();
-  const ws=wb.addWorksheet("Inventario");
-  ws.addRow(["Código","Aula","CPU","RAM","Disco","SO","Estado"]);
-  base.forEach(p=>ws.addRow([p.codigo,p.aula,p.cpu,p.ram,p.storage,p.os,p.estado]));
-  wb.xlsx.writeBuffer().then(b=>{
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(new Blob([b]));
-    a.download="Inventario_PCs.xlsx";
-    a.click();
-  });
+const wb=new ExcelJS.Workbook();
+const ws=wb.addWorksheet("Inventario");
+ws.addRow(["Código","Aula","CPU","RAM","Disco","SO","Estado","Teclado","Mouse","Monitor","Parlante","Proyector"]);
+base.forEach(p=>ws.addRow([p.codigo,p.aula,p.cpu,p.ram,p.storage,p.os,p.estado,p.teclado,p.mouse,p.monitor,p.parlante,p.proyector]));
+wb.xlsx.writeBuffer().then(b=>{
+const a=document.createElement("a");
+a.href=URL.createObjectURL(new Blob([b]));
+a.download="Inventario_Aulas.xlsx";
+a.click();
+});
 }
 
 function pdfPC(i){
-  const p=base[i];
-  const {jsPDF}=window.jspdf;
-  const pdf=new jsPDF();
-  pdf.text("ACTA DE ENTREGA DE PC",105,15,{align:"center"});
-  pdf.text(`Código: ${p.codigo}`,20,30);
-  pdf.text(`Aula: ${p.aula}`,20,38);
-  pdf.text(`Estado: ${p.estado}`,20,46);
-  pdf.save(`Acta_${p.codigo}.pdf`);
+const p=base[i];
+const {jsPDF}=window.jspdf;
+const pdf=new jsPDF();
+pdf.text("ACTA DE ENTREGA DE EQUIPO",105,15,{align:"center"});
+let y=30;
+Object.entries(p).forEach(([k,v])=>{
+if(k!=="evidencia") pdf.text(`${k.toUpperCase()}: ${v}`,20,y+=8);
+});
+pdf.save(`Acta_${p.codigo}.pdf`);
 }
 
 render();
